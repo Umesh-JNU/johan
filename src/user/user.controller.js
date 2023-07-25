@@ -96,7 +96,14 @@ exports.forgotPassword = catchAsyncError(async (req, res, next) => {
 
   // get resetPassword OTP
   const otp = generateOTP();
-  await otpModel.create({ otp, email: user.email });
+
+  const otpInstance = await otpModel.findOne({ email: user.email });
+  if (!otpInstance) {
+    await otpModel.create({ otp, email: user.email });
+  } else {
+    otpInstance.otp = otp;
+    await otpInstance.save();
+  }
 
   const message = `<b>Your password reset OTP is :- <h2>${otp}</h2></b>This OTP is valid for 15 minutes.</b><div>If you have not requested this email then, please ignore it.</div>`;
 
@@ -125,10 +132,11 @@ exports.verifyOTP = catchAsyncError(async (req, res, next) => {
 
   console.log({ otp, email });
   const otpInstance = await otpModel.findOne({ otp, email });
-  const is_valid = await otpInstance.is_valid();
-  if (!otpInstance || !is_valid) {
-    if (otpInstance)
+
+  if (!otpInstance || !(await otpInstance.is_valid())) {
+    if (otpInstance) {
       await otpInstance.deleteOne();
+    }
     return next(new ErrorHandler("OTP is invalid or has been expired.", 400));
   }
 

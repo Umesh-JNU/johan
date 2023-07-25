@@ -10,6 +10,7 @@ router.put("/update-profile", auth, updateProfile);
 router.post("/forgot-password", forgotPassword);
 router.post("/verify-otp", verifyOTP);
 router.put("/reset-password", updatePassword);
+router.post("/resend-otp", forgotPassword);
 
 router.post("/", getAllUser);
 router.route("/:id")
