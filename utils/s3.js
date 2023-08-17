@@ -40,7 +40,11 @@ exports.s3UploadMulti = async (files) => {
 const storage = multer.memoryStorage();
 
 const fileFilter = (req, file, cb) => {
-  if (file.mimetype.split("/")[0] === "image") {
+  console.log({ file });
+  // file.mimetype = "text/csv"       for csv file
+  // file.mimetype = "text/plain"     for txt file
+  
+  if (file.mimetype.split("/")[0] === "text") {
     req.video_file = false;
     cb(null, true);
 //   } else if (file.mimetype.split("/")[0] === "video") {

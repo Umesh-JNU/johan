@@ -4,10 +4,6 @@ const errorMiddleware = require("./middlewares/error");
 const dotenv = require("dotenv");
 const app = express();
 
-{/**
-https://evelyne-api.adaptable.app/api/
-*/}
-
 const path = "./config/config.env";
 // const path = "./config/local.env";
 
@@ -24,9 +20,9 @@ app.use(
 
 app.get("/", (req, res, next) => res.json({ message: "Server is running" }));
 
-const { userRoute } = require('./src');
+const { dataRoute } = require('./src');
 
-app.use("/api/user", userRoute);
+app.use("/api/dataset", dataRoute);
 
 app.all("*", async (req, res) => {
   res
